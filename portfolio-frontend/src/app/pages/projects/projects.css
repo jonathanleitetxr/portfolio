@@ -1,0 +1,29 @@
+.morph-modal {
+  position: fixed;
+  z-index: 50;
+  overflow: hidden;
+  transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-radius 0.35s ease;
+  border-radius: 0.75rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-backdrop {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-inner-content {
+  opacity: 0;
+  transition: opacity 0.25s ease 0.15s;
+}
+
+.modal-inner-content.visible {
+  opacity: 1;
+}

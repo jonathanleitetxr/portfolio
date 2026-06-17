@@ -1,0 +1,113 @@
+<section class="min-h-screen bg-gray-900 text-white pt-24 pb-16">
+  <div class="max-w-5xl mx-auto px-4">
+
+    <h1 class="text-4xl font-bold mb-12 text-center">
+      Mes <span class="text-indigo-400">projets</span>
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Projet universitaire -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+        <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
+          <span class="text-indigo-300 text-lg font-semibold">Projet universitaire</span>
+        </div>
+        <div class="p-5">
+          <h2 class="text-lg font-semibold mb-2">Projet universitaire</h2>
+          <p class="text-gray-400 text-sm mb-4">Projet réalisé durant mon Master 2 MIAGE.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Java</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projet Crédit Agricole -->
+      <div (click)="openModal($event)" class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+        <img src="assets/images/Image1.png" alt="New Pilote" class="w-full h-48 object-cover"/>
+        <div class="p-5">
+          <h2 class="text-lg font-semibold mb-2">New Pilote</h2>
+          <p class="text-gray-400 text-sm mb-4">Application de gestion de projet au sein du pôle innovation du Crédit Agricole Centre Loire.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">JavaScript</span>
+            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">PHP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ce portfolio -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+        <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
+          <span class="text-indigo-300 text-lg font-semibold">(En cours)</span>
+        </div>
+        <div class="p-5">
+          <h2 class="text-lg font-semibold mb-2">Ce portfolio</h2>
+          <p class="text-gray-400 text-sm mb-4">Application fullstack Java Spring Boot + Angular.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Java</span>
+            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Spring Boot</span>
+            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Angular</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Modal New Pilote -->
+@if (isModalOpen) {
+  <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-75 z-40" (click)="closeModal()"></div>
+
+  <div class="morph-modal bg-gray-800"
+       [style.top]="isAnimating ? '5vh' : startTop + 'px'"
+       [style.left]="isAnimating ? '50%' : startLeft + 'px'"
+       [style.width]="isAnimating ? 'min(48rem, 90vw)' : startWidth + 'px'"
+       [style.height]="isAnimating ? '90vh' : startHeight + 'px'"
+       [style.transform]="isAnimating ? 'translateX(-50%)' : 'none'"
+       (click)="$event.stopPropagation()">
+    <div class="modal-inner-content h-full overflow-y-auto" [class.visible]="isAnimating">
+      
+      <div class="flex justify-between items-center p-6 border-b border-gray-700 sticky top-0 bg-gray-800">
+        <h2 class="text-2xl font-bold text-indigo-400">New Pilote</h2>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      <div class="relative">
+        <img [src]="'assets/images/Image' + (currentImage + 1) + '.png'" alt="New Pilote" class="w-full object-cover max-h-80"/>
+        <button (click)="prevImage()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl">‹</button>
+        <button (click)="nextImage()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl">›</button>
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+          @for (i of images; track i) {
+            <span class="w-2 h-2 rounded-full cursor-pointer"
+              [class.bg-white]="currentImage === i"
+              [class.bg-gray-500]="currentImage !== i"
+              (click)="currentImage = i">
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="p-6">
+        <div class="mb-4">
+          <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wide">
+            {{ slides[currentImage].tag }}
+          </span>
+        </div>
+        <p class="text-gray-300 leading-relaxed">
+          {{ slides[currentImage].description }}
+        </p>
+
+        <div class="mt-6 pt-6 border-t border-gray-700">
+          <p class="text-sm text-gray-400 mb-3">Technologies utilisées</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">JavaScript</span>
+            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">PHP</span>
+            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">Drag & Drop</span>
+            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">DataTable</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}
