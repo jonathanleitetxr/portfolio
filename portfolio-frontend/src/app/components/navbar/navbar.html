@@ -1,12 +1,30 @@
 <nav class="bg-gray-900 text-white shadow-lg fixed w-full top-0 z-50">
   <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-    <a routerLink="/" class="text-xl font-bold text-indigo-400">Jonathan LEITE TEIXEIRA</a>
-    <ul class="flex gap-8">
-      <li><a routerLink="/" routerLinkActive="text-indigo-400" [routerLinkActiveOptions]="{exact: true}" class="hover:text-indigo-400 transition-colors">Accueil</a></li>
+    <a routerLink="/" class="text-xl font-bold text-indigo-400">Jonathan Leite</a>
+    
+    <!-- Liens desktop -->
+    <ul class="hidden md:flex gap-8">
+      <li><a routerLink="/" routerLinkActive="text-indigo-400" class="hover:text-indigo-400 transition-colors">Accueil</a></li>
       <li><a routerLink="/about" routerLinkActive="text-indigo-400" class="hover:text-indigo-400 transition-colors">À propos</a></li>
       <li><a routerLink="/skills" routerLinkActive="text-indigo-400" class="hover:text-indigo-400 transition-colors">Compétences</a></li>
       <li><a routerLink="/projects" routerLinkActive="text-indigo-400" class="hover:text-indigo-400 transition-colors">Projets</a></li>
       <li><a routerLink="/contact" routerLinkActive="text-indigo-400" class="hover:text-indigo-400 transition-colors">Contact</a></li>
     </ul>
+
+    <!-- Bouton hamburger mobile -->
+    <button (click)="toggleMenu()" class="md:hidden text-white text-2xl">
+      {{ isMenuOpen ? '✕' : '☰' }}
+    </button>
   </div>
+
+  <!-- Menu mobile déroulant -->
+  @if (isMenuOpen) {
+    <ul class="md:hidden bg-gray-800 px-4 pb-4 flex flex-col gap-4">
+      <li><a routerLink="/" (click)="closeMenu()" routerLinkActive="text-indigo-400" class="block py-2 hover:text-indigo-400 transition-colors">Accueil</a></li>
+      <li><a routerLink="/about" (click)="closeMenu()" routerLinkActive="text-indigo-400" class="block py-2 hover:text-indigo-400 transition-colors">À propos</a></li>
+      <li><a routerLink="/skills" (click)="closeMenu()" routerLinkActive="text-indigo-400" class="block py-2 hover:text-indigo-400 transition-colors">Compétences</a></li>
+      <li><a routerLink="/projects" (click)="closeMenu()" routerLinkActive="text-indigo-400" class="block py-2 hover:text-indigo-400 transition-colors">Projets</a></li>
+      <li><a routerLink="/contact" (click)="closeMenu()" routerLinkActive="text-indigo-400" class="block py-2 hover:text-indigo-400 transition-colors">Contact</a></li>
+    </ul>
+  }
 </nav>

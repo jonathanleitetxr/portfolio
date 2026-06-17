@@ -39,6 +39,7 @@ export class Projects {
     this.isModalOpen = true;
     this.isAnimating = false;
     this.currentImage = 0;
+    document.body.style.overflow = 'hidden';
     this.cdr.detectChanges();
 
     setTimeout(() => {
@@ -53,6 +54,7 @@ export class Projects {
 
     setTimeout(() => {
       this.isModalOpen = false;
+      document.body.style.overflow = '';
       this.cdr.detectChanges();
     }, 350);
   }

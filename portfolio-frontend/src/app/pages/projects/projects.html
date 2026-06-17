@@ -59,51 +59,56 @@
   <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-75 z-40" (click)="closeModal()"></div>
 
   <div class="morph-modal bg-gray-800"
-       [style.top]="isAnimating ? '5vh' : startTop + 'px'"
-       [style.left]="isAnimating ? '50%' : startLeft + 'px'"
-       [style.width]="isAnimating ? 'min(48rem, 90vw)' : startWidth + 'px'"
-       [style.height]="isAnimating ? '90vh' : startHeight + 'px'"
-       [style.transform]="isAnimating ? 'translateX(-50%)' : 'none'"
-       (click)="$event.stopPropagation()">
-    <div class="modal-inner-content h-full overflow-y-auto" [class.visible]="isAnimating">
+     [style.top]="isAnimating ? '5vh' : startTop + 'px'"
+     [style.left]="isAnimating ? '50%' : startLeft + 'px'"
+     [style.width]="isAnimating ? 'min(48rem, 90vw)' : startWidth + 'px'"
+     [style.height]="isAnimating ? '90vh' : startHeight + 'px'"
+     [style.transform]="isAnimating ? 'translateX(-50%)' : 'none'"
+     (click)="$event.stopPropagation()">
+  
+    <div class="modal-inner-content" [class.visible]="isAnimating">
       
-      <div class="flex justify-between items-center p-6 border-b border-gray-700 sticky top-0 bg-gray-800">
+      <!-- Header fixe -->
+      <div class="flex justify-between items-center p-6 border-b border-gray-700 flex-shrink-0">
         <h2 class="text-2xl font-bold text-indigo-400">New Pilote</h2>
         <button (click)="closeModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
       </div>
 
-      <div class="relative">
-        <img [src]="'assets/images/Image' + (currentImage + 1) + '.png'" alt="New Pilote" class="w-full object-cover max-h-80"/>
-        <button (click)="prevImage()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl">‹</button>
-        <button (click)="nextImage()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl">›</button>
-        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-          @for (i of images; track i) {
-            <span class="w-2 h-2 rounded-full cursor-pointer"
-              [class.bg-white]="currentImage === i"
-              [class.bg-gray-500]="currentImage !== i"
-              (click)="currentImage = i">
+      <!-- Zone scrollable -->
+      <div class="modal-scroll-area">
+        <div class="relative h-64 md:h-80 bg-gray-900">
+          <img [src]="'assets/images/Image' + (currentImage + 1) + '.png'" alt="New Pilote" class="w-full h-full object-contain"/>
+          <button (click)="prevImage()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl">‹</button>
+          <button (click)="nextImage()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl">›</button>
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+            @for (i of images; track i) {
+              <span class="w-2 h-2 rounded-full cursor-pointer"
+                [class.bg-white]="currentImage === i"
+                [class.bg-gray-500]="currentImage !== i"
+                (click)="currentImage = i">
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="mb-4">
+            <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wide">
+              {{ slides[currentImage].tag }}
             </span>
-          }
-        </div>
-      </div>
+          </div>
+          <p class="text-gray-300 leading-relaxed">
+            {{ slides[currentImage].description }}
+          </p>
 
-      <div class="p-6">
-        <div class="mb-4">
-          <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wide">
-            {{ slides[currentImage].tag }}
-          </span>
-        </div>
-        <p class="text-gray-300 leading-relaxed">
-          {{ slides[currentImage].description }}
-        </p>
-
-        <div class="mt-6 pt-6 border-t border-gray-700">
-          <p class="text-sm text-gray-400 mb-3">Technologies utilisées</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">JavaScript</span>
-            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">PHP</span>
-            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">Drag & Drop</span>
-            <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">DataTable</span>
+          <div class="mt-6 pt-6 border-t border-gray-700">
+            <p class="text-sm text-gray-400 mb-3">Technologies utilisées</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">JavaScript</span>
+              <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">PHP</span>
+              <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">Drag & Drop</span>
+              <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm">DataTable</span>
+            </div>
           </div>
         </div>
       </div>
