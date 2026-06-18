@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -33,4 +34,8 @@ public class Project {
     private LocalDate endDate;
 
     private boolean featured;
+
+    // Relation One-to-Many : un projet peut avoir plusieurs slides
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectSlide> slides;
 }

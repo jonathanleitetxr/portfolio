@@ -1,15 +1,16 @@
 <section class="min-h-screen bg-gray-900 text-white flex items-center justify-center pt-16">
-  <div class="max-w-5xl mx-auto px-4 text-center">
-    <h1 class="text-5xl font-bold mb-4">
-      Bonjour, je suis <span class="text-indigo-400">Jonathan LEITE TEIXEIRA</span>
-    </h1>
-    <p class="text-xl text-gray-400 mb-8">
-      Développeur Full Stack · Diplômé MIAGE
-    </p>
-    <p class="text-lg text-gray-300 mb-12 max-w-2xl mx-auto">
-      Passionné par le développement backend et Frontend. 
-      À la recherche d'opportunités pour rejoindre une équipe dynamique.
-    </p>
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    @if (homeContent()) {
+      <h1 class="text-5xl font-bold mb-4">
+        {{ homeContent()!.title }}
+      </h1>
+      <p class="text-xl text-gray-400 mb-8">
+        {{ homeContent()!.subtitle }}
+      </p>
+      <p class="text-lg text-gray-300 mb-12 max-w-2xl mx-auto">
+        {{ homeContent()!.description }}
+      </p>
+    }
     <div class="flex gap-4 justify-center">
       <a routerLink="/projects" 
          class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">

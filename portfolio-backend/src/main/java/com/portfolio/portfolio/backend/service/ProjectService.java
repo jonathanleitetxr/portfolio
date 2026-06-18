@@ -16,10 +16,6 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public List<Project> getFeaturedProjects() {
-        return projectRepository.findByFeaturedTrue();
-    }
-
     public Project getProjectById(Long id) {
         return projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé"));

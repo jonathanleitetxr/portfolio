@@ -5,46 +5,30 @@
       À <span class="text-indigo-400">propos</span>
     </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-      <div>
-        <h2 class="text-2xl font-semibold mb-4 text-indigo-400">Qui suis-je ?</h2>
-        <p class="text-gray-300 leading-relaxed mb-4">
-          Développeur junior diplômé d'un Master MIAGE, j'ai effectué mon alternance 
-          au Crédit Agricole Centre Loire où j'ai travaillé sur des applications PHP/Symfony.
-        </p>
-        <p class="text-gray-300 leading-relaxed">
-          Passionné par le développement Java depuis mes années universitaires, 
-          je cherche aujourd'hui à évoluer vers des projets Java/Angular en entreprise.
-        </p>
-      </div>
+    @if (aboutContent()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        <div>
+          <h2 class="text-2xl font-semibold mb-4 text-indigo-400">Qui suis-je ?</h2>
+          <p class="text-gray-300 leading-relaxed">
+            {{ aboutContent()!.description }}
+          </p>
+        </div>
 
-      <div>
-        <h2 class="text-2xl font-semibold mb-4 text-indigo-400">Formation</h2>
-        <div class="space-y-4">
-          <div class="border-l-2 border-indigo-400 pl-4">
-            <p class="font-semibold">Master MIAGE</p>
-            <p class="text-gray-400 text-sm">2022 - 2025</p>
-            <p class="text-gray-300 text-sm">Méthodes Informatiques Appliquées à la Gestion des Entreprises</p>
-          </div>
-          <div class="border-l-2 border-indigo-400 pl-4">
-            <p class="font-semibold">Licence MIAGE</p>
-            <p class="text-gray-400 text-sm">2021 - 2022</p>
-          </div>
+        <div>
+          <h2 class="text-2xl font-semibold mb-4 text-indigo-400">Formation</h2>
+          <p class="text-gray-300 leading-relaxed">
+            {{ aboutContent()!.formation }}
+          </p>
         </div>
       </div>
-    </div>
 
-    <div>
-      <h2 class="text-2xl font-semibold mb-6 text-indigo-400">Expérience</h2>
-      <div class="border-l-2 border-indigo-400 pl-4">
-        <p class="font-semibold">Développeur PHP/Symfony — Alternance</p>
-        <p class="text-gray-400 text-sm">Crédit Agricole Centre Loire · 2024 - 2025</p>
-        <p class="text-gray-300 mt-2">
-          Développement et maintenance d'applications internes en PHP/Symfony. 
-          Travail en équipe agile, revues de code, intégration continue.
+      <div>
+        <h2 class="text-2xl font-semibold mb-6 text-indigo-400">Expérience</h2>
+        <p class="text-gray-300 leading-relaxed">
+          {{ aboutContent()!.experience }}
         </p>
       </div>
-    </div>
+    }
 
   </div>
 </section>

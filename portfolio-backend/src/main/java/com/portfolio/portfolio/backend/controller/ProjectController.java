@@ -20,11 +20,6 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @GetMapping("/featured")
-    public List<Project> getFeaturedProjects() {
-        return projectService.getFeaturedProjects();
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.getProjectById(id));

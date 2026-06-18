@@ -20,11 +20,6 @@ public class SkillController {
         return skillService.getAllSkills();
     }
 
-    @GetMapping("/category/{category}")
-    public List<Skill> getSkillsByCategory(@PathVariable String category) {
-        return skillService.getSkillsByCategory(category);
-    }
-
     @PostMapping
     public ResponseEntity<Skill> createSkill(@RequestBody Skill skill) {
         return ResponseEntity.ok(skillService.createSkill(skill));

@@ -5,30 +5,32 @@
       Me <span class="text-indigo-400">contacter</span>
     </h1>
 
-    <div class="bg-gray-800 rounded-xl p-8 mb-8">
-      <div class="space-y-4">
-        <div class="flex items-center gap-4">
-          <span class="text-indigo-400 text-xl">✉</span>
-          <a href="mailto:jonathan.leite@email.com" class="text-gray-300 hover:text-indigo-400 transition-colors">
-            jleiteteixeira7@gmail.com
-          </a>
-        </div>
-        <div class="flex items-center gap-4">
-          <span class="text-indigo-400 text-xl">💼</span>
-          <a href="https://www.linkedin.com/in/jonathan-leite-teixeira/" target="_blank" class="text-gray-300 hover:text-indigo-400 transition-colors">
-            LinkedIn
-          </a>
-        </div>
-        <div class="flex items-center gap-4">
-          <span class="text-indigo-400 text-xl">📱</span>
-          <a href="tel:+33781777837" class="text-gray-300 hover:text-indigo-400 transition-colors">
-            07 81 77 78 37
-          </a>
+    @if (contactContent()) {
+      <div class="bg-gray-800 rounded-xl p-8 mb-8">
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <span class="text-indigo-400 text-xl">✉</span>
+            <a [href]="'mailto:' + contactContent()!.email" class="text-gray-300 hover:text-indigo-400 transition-colors">
+              {{ contactContent()!.email }}
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-indigo-400 text-xl">📱</span>
+            <a [href]="'tel:' + contactContent()!.phone" class="text-gray-300 hover:text-indigo-400 transition-colors">
+              {{ contactContent()!.phone }}
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-indigo-400 text-xl">💼</span>
+            <a [href]="contactContent()!.linkedin" target="_blank" class="text-gray-300 hover:text-indigo-400 transition-colors">
+              LinkedIn
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    }
 
-    <div class="hidden bg-gray-800 rounded-xl p-8">
+    <div class="bg-gray-800 rounded-xl p-8">
       <h2 class="text-xl font-semibold mb-6 text-indigo-400">Envoyer un message</h2>
       <form class="space-y-4">
         <div>

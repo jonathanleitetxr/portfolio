@@ -16,10 +16,6 @@ public class SkillService {
         return skillRepository.findAll();
     }
 
-    public List<Skill> getSkillsByCategory(String category) {
-        return skillRepository.findByCategory(category);
-    }
-
     public Skill createSkill(Skill skill) {
         return skillRepository.save(skill);
     }
