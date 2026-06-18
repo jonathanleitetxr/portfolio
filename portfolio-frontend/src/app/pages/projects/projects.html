@@ -7,7 +7,49 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <!-- Projet universitaire -->
+      @for (project of projects(); track project.id) {
+
+        <!-- Projet New Pilote avec modal -->
+        @if (project.title === 'New Pilote') {
+          <div (click)="openModal($event)" class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+            <img [src]="project.imageUrl" alt="{{ project.title }}" class="w-full h-48 object-cover"/>
+            <div class="p-5">
+              <h2 class="text-lg font-semibold mb-2">{{ project.title }}</h2>
+              <p class="text-gray-400 text-sm mb-4">{{ project.description }}</p>
+              <div class="flex flex-wrap gap-2">
+                @for (tech of project.technologies.split(','); track tech) {
+                  <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">{{ tech }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Autres projets -->
+        @if (project.title !== 'New Pilote') {
+          <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+            @if (project.imageUrl) {
+              <img [src]="project.imageUrl" alt="{{ project.title }}" class="w-full h-48 object-cover"/>
+            } @else {
+              <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
+                <span class="text-indigo-300 text-lg font-semibold">{{ project.title }}</span>
+              </div>
+            }
+            <div class="p-5">
+              <h2 class="text-lg font-semibold mb-2">{{ project.title }}</h2>
+              <p class="text-gray-400 text-sm mb-4">{{ project.description }}</p>
+              <div class="flex flex-wrap gap-2">
+                @for (tech of project.technologies.split(','); track tech) {
+                  <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">{{ tech }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+      }
+
+      <!-- Projet universitaire (statique en attendant les infos) -->
       <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
         <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
           <span class="text-indigo-300 text-lg font-semibold">Projet universitaire</span>
@@ -21,35 +63,6 @@
         </div>
       </div>
 
-      <!-- Projet Crédit Agricole -->
-      <div (click)="openModal($event)" class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-        <img src="assets/images/Image1.png" alt="New Pilote" class="w-full h-48 object-cover"/>
-        <div class="p-5">
-          <h2 class="text-lg font-semibold mb-2">New Pilote</h2>
-          <p class="text-gray-400 text-sm mb-4">Application de gestion de projet au sein du pôle innovation du Crédit Agricole Centre Loire.</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">JavaScript</span>
-            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">PHP</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ce portfolio -->
-      <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-        <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
-          <span class="text-indigo-300 text-lg font-semibold">(En cours)</span>
-        </div>
-        <div class="p-5">
-          <h2 class="text-lg font-semibold mb-2">Ce portfolio</h2>
-          <p class="text-gray-400 text-sm mb-4">Application fullstack Java Spring Boot + Angular.</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Java</span>
-            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Spring Boot</span>
-            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Angular</span>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
@@ -59,22 +72,20 @@
   <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-75 z-40" (click)="closeModal()"></div>
 
   <div class="morph-modal bg-gray-800"
-     [style.top]="isAnimating ? '5vh' : startTop + 'px'"
-     [style.left]="isAnimating ? '50%' : startLeft + 'px'"
-     [style.width]="isAnimating ? 'min(48rem, 90vw)' : startWidth + 'px'"
-     [style.height]="isAnimating ? '90vh' : startHeight + 'px'"
-     [style.transform]="isAnimating ? 'translateX(-50%)' : 'none'"
-     (click)="$event.stopPropagation()">
-  
+       [style.top]="isAnimating ? '5vh' : startTop + 'px'"
+       [style.left]="isAnimating ? '50%' : startLeft + 'px'"
+       [style.width]="isAnimating ? 'min(48rem, 90vw)' : startWidth + 'px'"
+       [style.height]="isAnimating ? '90vh' : startHeight + 'px'"
+       [style.transform]="isAnimating ? 'translateX(-50%)' : 'none'"
+       (click)="$event.stopPropagation()">
+
     <div class="modal-inner-content" [class.visible]="isAnimating">
-      
-      <!-- Header fixe -->
+
       <div class="flex justify-between items-center p-6 border-b border-gray-700 flex-shrink-0">
         <h2 class="text-2xl font-bold text-indigo-400">New Pilote</h2>
         <button (click)="closeModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
       </div>
 
-      <!-- Zone scrollable -->
       <div class="modal-scroll-area">
         <div class="relative h-64 md:h-80 bg-gray-900">
           <img [src]="'assets/images/Image' + (currentImage + 1) + '.png'" alt="New Pilote" class="w-full h-full object-contain"/>

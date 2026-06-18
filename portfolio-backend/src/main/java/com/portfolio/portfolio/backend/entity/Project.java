@@ -22,6 +22,12 @@ public class Project {
 
     private String technologies;
 
+    private String imageUrl;
+
+    private String githubUrl;
+
+    private String demoUrl;
+
     private LocalDate startDate;
 
     private LocalDate endDate;
