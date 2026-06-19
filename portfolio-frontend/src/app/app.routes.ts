@@ -4,6 +4,10 @@ import { About } from './pages/about/about';
 import { Skills } from './pages/skills/skills';
 import { Projects } from './pages/projects/projects';
 import { Contact } from './pages/contact/contact';
+import { Login } from './pages/login/login';
+import { guestGuard } from './guards/guest-guard';
+
+
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -11,5 +15,6 @@ export const routes: Routes = [
   { path: 'skills', component: Skills },
   { path: 'projects', component: Projects },
   { path: 'contact', component: Contact },
+  { path: 'login', component: Login, canActivate: [guestGuard] },
   { path: '**', redirectTo: '' }
 ];

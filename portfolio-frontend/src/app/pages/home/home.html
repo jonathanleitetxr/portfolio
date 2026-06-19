@@ -1,5 +1,21 @@
-<section class="min-h-screen bg-gray-900 text-white flex items-center justify-center pt-16">
+<section class="relative min-h-screen bg-gray-900 text-white flex items-center justify-center pt-16">
+
+  @if (authService.isLoggedIn()) {
+    <button (click)="openEditModal()"
+       class="absolute top-20 right-4 md:top-24 md:right-8 flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors z-10">
+      ✏️ Modifier
+    </button>
+  }
+
   <div class="max-w-4xl mx-auto px-4 text-center">
+
+    <img 
+      [src]="homeContent()?.photoUrl || 'assets/images/photo.jpg'"
+      alt="Jonathan Leite"
+      (click)="onPhotoClick()"
+      class="w-48 h-48 rounded-full object-cover object-[center_20%] mx-auto mb-6 border-4 border-indigo-400 cursor-pointer hover:scale-105 transition-transform"
+    />
+
     @if (homeContent()) {
       <h1 class="text-5xl font-bold mb-4">
         {{ homeContent()!.title }}
@@ -11,7 +27,8 @@
         {{ homeContent()!.description }}
       </p>
     }
-    <div class="flex gap-4 justify-center">
+
+    <div class="flex gap-4 justify-center flex-wrap">
       <a routerLink="/projects" 
          class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
         Voir mes projets
@@ -20,6 +37,62 @@
          class="border border-indigo-400 text-indigo-400 hover:bg-indigo-400 hover:text-white px-8 py-3 rounded-lg font-semibold transition-colors">
         Me contacter
       </a>
+
+      @if (showAdminAccess()) {
+        <a routerLink="/login" 
+           class="border border-gray-600 text-gray-400 hover:bg-gray-700 px-8 py-3 rounded-lg font-semibold transition-colors">
+          🔒 Admin
+        </a>
+      }
     </div>
+
   </div>
 </section>
+
+<!-- Modal d'édition (reste identique, inchangée) -->
+@if (isEditModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeEditModal()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6" (click)="$event.stopPropagation()">
+      
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">Modifier la page d'accueil</h2>
+        <button (click)="closeEditModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Titre</label>
+          <input type="text" [(ngModel)]="editForm.title"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Sous-titre</label>
+          <input type="text" [(ngModel)]="editForm.subtitle"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Description</label>
+          <textarea rows="3" [(ngModel)]="editForm.description"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">URL de la photo</label>
+          <input type="text" [(ngModel)]="editForm.photoUrl"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeEditModal()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveChanges()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

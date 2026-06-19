@@ -18,4 +18,6 @@ public class Home {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    private String photoUrl;
 }
