@@ -9,16 +9,31 @@
 
       <!-- Backend -->
       <div class="bg-gray-800 rounded-xl p-6">
-        <h2 class="text-xl font-semibold mb-6 text-indigo-400">Backend</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-indigo-400">Backend</h2>
+          @if (authService.isLoggedIn()) {
+            <button (click)="openCreateModal('Backend')"
+              class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              + Ajouter
+            </button>
+          }
+        </div>
         <div class="space-y-4">
           @for (skill of backendSkills(); track skill.id) {
             <div>
               <div class="flex justify-between mb-1">
-                <span>{{ skill.name }}</span><span class="text-gray-400">{{ skill.level }}%</span>
+                <span>{{ skill.name }}</span>
+                <span class="text-gray-400">{{ skill.level }}%</span>
               </div>
               <div class="w-full bg-gray-700 rounded-full h-2">
                 <div class="bg-indigo-500 h-2 rounded-full" [style.width]="skill.level + '%'"></div>
               </div>
+              @if (authService.isLoggedIn()) {
+                <div class="flex gap-2 mt-1">
+                  <button (click)="openEditModal(skill)" class="text-xs text-gray-400 hover:text-white">✏️ Modifier</button>
+                  <button (click)="deleteSkill(skill.id)" class="text-xs text-gray-400 hover:text-red-400">🗑️ Supprimer</button>
+                </div>
+              }
             </div>
           }
         </div>
@@ -26,16 +41,31 @@
 
       <!-- Frontend -->
       <div class="bg-gray-800 rounded-xl p-6">
-        <h2 class="text-xl font-semibold mb-6 text-indigo-400">Frontend</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-indigo-400">Frontend</h2>
+          @if (authService.isLoggedIn()) {
+            <button (click)="openCreateModal('Frontend')"
+              class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              + Ajouter
+            </button>
+          }
+        </div>
         <div class="space-y-4">
           @for (skill of frontendSkills(); track skill.id) {
             <div>
               <div class="flex justify-between mb-1">
-                <span>{{ skill.name }}</span><span class="text-gray-400">{{ skill.level }}%</span>
+                <span>{{ skill.name }}</span>
+                <span class="text-gray-400">{{ skill.level }}%</span>
               </div>
               <div class="w-full bg-gray-700 rounded-full h-2">
                 <div class="bg-indigo-500 h-2 rounded-full" [style.width]="skill.level + '%'"></div>
               </div>
+              @if (authService.isLoggedIn()) {
+                <div class="flex gap-2 mt-1">
+                  <button (click)="openEditModal(skill)" class="text-xs text-gray-400 hover:text-white">✏️ Modifier</button>
+                  <button (click)="deleteSkill(skill.id)" class="text-xs text-gray-400 hover:text-red-400">🗑️ Supprimer</button>
+                </div>
+              }
             </div>
           }
         </div>
@@ -43,24 +73,154 @@
 
       <!-- Outils -->
       <div class="bg-gray-800 rounded-xl p-6">
-        <h2 class="text-xl font-semibold mb-6 text-indigo-400">Outils</h2>
-        <div class="flex flex-wrap gap-3">
-          @for (skill of outilsSkills(); track skill.id) {
-            <span class="bg-gray-700 px-3 py-1 rounded-full text-sm">{{ skill.name }}</span>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-indigo-400">Outils</h2>
+          @if (authService.isLoggedIn()) {
+            <button (click)="openCreateModal('Outils')"
+              class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              + Ajouter
+            </button>
           }
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="outilsLeft" cdkDropList [cdkDropListData]="outilsSkillsLeft()" [cdkDropListConnectedTo]="['outilsRight']" 
+          (cdkDropListDropped)="onOutilsDrop($event)" class="space-y-2">
+            @for (skill of outilsSkillsLeft(); track skill.id) {
+              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span class="text-gray-500">⠿</span>
+                  {{ skill.name }}
+                </span>
+                @if (authService.isLoggedIn()) {
+                  <div class="flex gap-2">
+                    <button (click)="openEditModal(skill)" class="text-gray-400 hover:text-white text-xs">✏️</button>
+                    <button (click)="deleteSkill(skill.id)" class="text-gray-400 hover:text-red-400 text-xs">🗑️</button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <div id="outilsRight" cdkDropList [cdkDropListData]="outilsSkillsRight()" [cdkDropListConnectedTo]="['outilsLeft']" 
+          (cdkDropListDropped)="onOutilsDrop($event)" class="space-y-2">
+            @for (skill of outilsSkillsRight(); track skill.id) {
+              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span class="text-gray-500">⠿</span>
+                  {{ skill.name }}
+                </span>
+                @if (authService.isLoggedIn()) {
+                  <div class="flex gap-2">
+                    <button (click)="openEditModal(skill)" class="text-gray-400 hover:text-white text-xs">✏️</button>
+                    <button (click)="deleteSkill(skill.id)" class="text-gray-400 hover:text-red-400 text-xs">🗑️</button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
         </div>
       </div>
 
       <!-- Méthodes -->
       <div class="bg-gray-800 rounded-xl p-6">
-        <h2 class="text-xl font-semibold mb-6 text-indigo-400">Méthodes</h2>
-        <div class="flex flex-wrap gap-3">
-          @for (skill of methodesSkills(); track skill.id) {
-            <span class="bg-gray-700 px-3 py-1 rounded-full text-sm">{{ skill.name }}</span>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-indigo-400">Méthodes</h2>
+          @if (authService.isLoggedIn()) {
+            <button (click)="openCreateModal('Méthodes')"
+              class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              + Ajouter
+            </button>
           }
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div id="methodesLeft" cdkDropList [cdkDropListData]="methodesSkillsLeft()" [cdkDropListConnectedTo]="['methodesRight']" 
+          (cdkDropListDropped)="onMethodesDrop($event)" class="space-y-2">
+            @for (skill of methodesSkillsLeft(); track skill.id) {
+              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span class="text-gray-500">⠿</span>
+                  {{ skill.name }}
+                </span>
+                @if (authService.isLoggedIn()) {
+                  <div class="flex gap-2">
+                    <button (click)="openEditModal(skill)" class="text-gray-400 hover:text-white text-xs">✏️</button>
+                    <button (click)="deleteSkill(skill.id)" class="text-gray-400 hover:text-red-400 text-xs">🗑️</button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <div id="methodesRight" cdkDropList [cdkDropListData]="methodesSkillsRight()" [cdkDropListConnectedTo]="['methodesLeft']" 
+          (cdkDropListDropped)="onMethodesDrop($event)" class="space-y-2">
+            @for (skill of methodesSkillsRight(); track skill.id) {
+              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span class="text-gray-500">⠿</span>
+                  {{ skill.name }}
+                </span>
+                @if (authService.isLoggedIn()) {
+                  <div class="flex gap-2">
+                    <button (click)="openEditModal(skill)" class="text-gray-400 hover:text-white text-xs">✏️</button>
+                    <button (click)="deleteSkill(skill.id)" class="text-gray-400 hover:text-red-400 text-xs">🗑️</button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
         </div>
       </div>
 
     </div>
   </div>
 </section>
+
+<!-- Modal création/édition -->
+@if (isModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeModal()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">
+          {{ modalMode === 'create' ? 'Ajouter une compétence' : 'Modifier la compétence' }}
+        </h2>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Nom</label>
+          <input type="text" [(ngModel)]="skillForm.name"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        @if (modalMode === 'edit') {
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Catégorie</label>
+            <select [(ngModel)]="skillForm.category"
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="Backend">Backend</option>
+              <option value="Frontend">Frontend</option>
+              <option value="Outils">Outils</option>
+              <option value="Méthodes">Méthodes</option>
+            </select>
+          </div>
+        }
+        @if (skillForm.category === 'Backend' || skillForm.category === 'Frontend') {
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Niveau (%)</label>
+            <input type="number" min="0" max="100" [(ngModel)]="skillForm.level"
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+          </div>
+        }
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeModal()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveSkill()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+}

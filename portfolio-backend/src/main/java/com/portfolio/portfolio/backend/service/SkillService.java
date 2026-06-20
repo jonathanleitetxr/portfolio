@@ -23,4 +23,9 @@ public class SkillService {
     public void deleteSkill(Long id) {
         skillRepository.deleteById(id);
     }
+
+    public Skill updateSkill(Long id, Skill skill) {
+        skill.setId(id);
+        return skillRepository.save(skill);
+    }
 }

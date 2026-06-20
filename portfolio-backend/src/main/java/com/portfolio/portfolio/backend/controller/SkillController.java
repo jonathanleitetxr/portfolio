@@ -10,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/skills")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class SkillController {
 
     private final SkillService skillService;
@@ -29,5 +28,10 @@ public class SkillController {
     public ResponseEntity<Void> deleteSkill(@PathVariable Long id) {
         skillService.deleteSkill(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Skill> updateSkill(@PathVariable Long id, @RequestBody Skill skill) {
+        return ResponseEntity.ok(skillService.updateSkill(id, skill));
     }
 }

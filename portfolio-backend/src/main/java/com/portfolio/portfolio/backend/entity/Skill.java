@@ -1,4 +1,5 @@
 package com.portfolio.portfolio.backend.entity;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -18,4 +19,7 @@ public class Skill {
     private String category;
 
     private int level;
+
+    @Column(name = "display_order")
+    private int displayOrder;
 }

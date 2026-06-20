@@ -1,0 +1,1 @@
+ALTER TABLE skills ADD COLUMN display_order INT DEFAULT 0;
