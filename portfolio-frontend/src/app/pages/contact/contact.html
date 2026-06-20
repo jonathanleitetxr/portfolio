@@ -5,8 +5,18 @@
       Me <span class="text-indigo-400">contacter</span>
     </h1>
 
-    @if (contactContent()) {
-      <div class="bg-gray-800 rounded-xl p-8 mb-8">
+    <div class="bg-gray-800 rounded-xl p-8 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-indigo-400">Mes coordonnées</h2>
+        @if (authService.isLoggedIn()) {
+          <button (click)="openEditModal()"
+             class="flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+            ✏️ Modifier
+          </button>
+        }
+      </div>
+
+      @if (contactContent()) {
         <div class="space-y-4">
           <div class="flex items-center gap-4">
             <span class="text-indigo-400 text-xl">✉</span>
@@ -27,8 +37,8 @@
             </a>
           </div>
         </div>
-      </div>
-    }
+      }
+    </div>
 
     <div class="bg-gray-800 rounded-xl p-8">
       <h2 class="text-xl font-semibold mb-6 text-indigo-400">Envoyer un message</h2>
@@ -57,3 +67,46 @@
 
   </div>
 </section>
+
+<!-- Modal d'édition -->
+@if (isEditModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeEditModal()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6" (click)="$event.stopPropagation()">
+      
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">Modifier mes coordonnées</h2>
+        <button (click)="closeEditModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Email</label>
+          <input type="email" [(ngModel)]="editForm.email"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Téléphone</label>
+          <input type="text" [(ngModel)]="editForm.phone"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">LinkedIn (URL complète)</label>
+          <input type="text" [(ngModel)]="editForm.linkedin"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeEditModal()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveChanges()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

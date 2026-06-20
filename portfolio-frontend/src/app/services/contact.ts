@@ -20,4 +20,10 @@ export class ContactService {
   getContact(): Observable<ContactContent> {
     return this.http.get<ContactContent>(this.apiUrl);
   }
+
+  updateContact(contact: ContactContent): Observable<ContactContent> {
+    return this.http.put<ContactContent>(this.apiUrl, contact, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+  }
 }

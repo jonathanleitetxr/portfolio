@@ -1,9 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ContactService, ContactContent } from '../../services/contact';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-contact',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './contact.html',
   styleUrl: './contact.css'
 })
@@ -11,7 +13,18 @@ export class Contact implements OnInit {
 
   contactContent = signal<ContactContent | null>(null);
 
-  constructor(private contactService: ContactService) {}
+  isEditModalOpen = signal<boolean>(false);
+
+  editForm = {
+    email: '',
+    phone: '',
+    linkedin: ''
+  };
+
+  constructor(
+    private contactService: ContactService,
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.contactService.getContact().subscribe({
@@ -20,6 +33,44 @@ export class Contact implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors de la récupération du contenu contact', err);
+      }
+    });
+  }
+
+  openEditModal(): void {
+    const current = this.contactContent();
+    if (current) {
+      this.editForm = {
+        email: current.email,
+        phone: current.phone,
+        linkedin: current.linkedin
+      };
+    }
+    this.isEditModalOpen.set(true);
+  }
+
+  closeEditModal(): void {
+    this.isEditModalOpen.set(false);
+  }
+
+  saveChanges(): void {
+    const current = this.contactContent();
+    if (!current) return;
+
+    const updated: ContactContent = {
+      id: current.id,
+      email: this.editForm.email,
+      phone: this.editForm.phone,
+      linkedin: this.editForm.linkedin
+    };
+
+    this.contactService.updateContact(updated).subscribe({
+      next: (data) => {
+        this.contactContent.set(data);
+        this.isEditModalOpen.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour', err);
       }
     });
   }
