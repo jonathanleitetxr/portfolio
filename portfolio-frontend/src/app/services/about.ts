@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 export interface AboutContent {
   id: number;
   description: string;
-  formation: string;
-  experience: string;
 }
 
 @Injectable({
@@ -19,5 +17,11 @@ export class AboutService {
 
   getAbout(): Observable<AboutContent> {
     return this.http.get<AboutContent>(this.apiUrl);
+  }
+
+  updateAbout(about: AboutContent): Observable<AboutContent> {
+    return this.http.put<AboutContent>(this.apiUrl, about, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
   }
 }

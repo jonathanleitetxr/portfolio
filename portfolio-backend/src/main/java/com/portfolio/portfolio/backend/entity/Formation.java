@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "home")
-public class Home {
+@Table(name = "formations")
+public class Formation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,10 +14,10 @@ public class Home {
 
     private String title;
 
-    private String subtitle;
+    private String startDate;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    private String endDate;
 
-    private String photoUrl;
+    @Column(name = "display_order")
+    private int displayOrder;
 }

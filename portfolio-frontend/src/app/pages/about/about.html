@@ -1,34 +1,231 @@
 <section class="min-h-screen bg-gray-900 text-white pt-24 pb-16">
-  <div class="max-w-4xl mx-auto px-4">
+
+  <div class="max-w-6xl mx-auto px-4">
     
-    <h1 class="text-4xl font-bold mb-12 text-center">
+    <h1 class="text-5xl font-bold mb-16 text-center">
       À <span class="text-indigo-400">propos</span>
     </h1>
 
-    @if (aboutContent()) {
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-        <div>
-          <h2 class="text-2xl font-semibold mb-4 text-indigo-400">Qui suis-je ?</h2>
-          <p class="text-gray-300 leading-relaxed">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+
+      <!-- Qui suis-je -->
+      <div class="bg-gray-800 rounded-xl p-7">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <span class="text-indigo-400 text-2xl">👋</span>
+            <h2 class="text-2xl font-semibold text-indigo-400">Qui suis-je</h2>
+          </div>
+          @if (authService.isLoggedIn()) {
+            <button (click)="openEditAboutModal()"
+               class="flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              ✏️ Modifier
+            </button>
+          }
+        </div>
+        @if (aboutContent()) {
+          <p class="text-gray-300 text-base leading-relaxed">
             {{ aboutContent()!.description }}
           </p>
-        </div>
+        }
+      </div>
 
-        <div>
-          <h2 class="text-2xl font-semibold mb-4 text-indigo-400">Formation</h2>
-          <p class="text-gray-300 leading-relaxed">
-            {{ aboutContent()!.formation }}
-          </p>
+      <!-- Formation -->
+      <div class="bg-gray-800 rounded-xl p-7">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <span class="text-indigo-400 text-2xl">🎓</span>
+            <h2 class="text-2xl font-semibold text-indigo-400">Formation</h2>
+          </div>
+          @if (authService.isLoggedIn()) {
+            <button (click)="openCreateFormationModal()"
+               class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              + Ajouter
+            </button>
+          }
+        </div>
+        <div cdkDropList (cdkDropListDropped)="onFormationDrop($event)" class="space-y-5">
+          @for (formation of formations(); track formation.id) {
+            <div cdkDrag class="border-l-2 border-indigo-400 pl-4 cursor-move bg-gray-800">
+              <div class="flex items-start gap-2">
+                <span class="text-gray-500 mt-1">⠿</span>
+                <div class="flex-1">
+                  <p class="text-white text-lg font-medium">{{ formation.title }}</p>
+                  <p class="text-gray-400 text-sm mt-1">{{ formation.startDate }} — {{ formation.endDate }}</p>
+                  @if (authService.isLoggedIn()) {
+                    <div class="flex gap-2 mt-2">
+                      <button (click)="openEditFormationModal(formation)" class="text-xs text-gray-400 hover:text-white">✏️ Modifier</button>
+                      <button (click)="deleteFormation(formation.id)" class="text-xs text-gray-400 hover:text-red-400">🗑️ Supprimer</button>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
 
-      <div>
-        <h2 class="text-2xl font-semibold mb-6 text-indigo-400">Expérience</h2>
-        <p class="text-gray-300 leading-relaxed">
-          {{ aboutContent()!.experience }}
-        </p>
+    </div>
+
+    <!-- Expérience -->
+    <div class="bg-gray-800 rounded-xl p-7">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <span class="text-indigo-400 text-2xl">💼</span>
+          <h2 class="text-2xl font-semibold text-indigo-400">Expérience</h2>
+        </div>
+        @if (authService.isLoggedIn()) {
+          <button (click)="openCreateExperienceModal()"
+             class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+            + Ajouter
+          </button>
+        }
       </div>
-    }
+      <div cdkDropList (cdkDropListDropped)="onExperienceDrop($event)" class="space-y-5">
+        @for (experience of experiences(); track experience.id) {
+          <div cdkDrag class="border-l-2 border-indigo-400 pl-4 cursor-move bg-gray-800">
+            <div class="flex items-start gap-2">
+              <span class="text-gray-500 mt-1">⠿</span>
+              <div class="flex-1">
+                <p class="text-white text-lg font-medium">{{ experience.title }}</p>
+                <p class="text-gray-400 text-sm mt-1">{{ experience.company }} · {{ experience.startDate }} — {{ experience.endDate }}</p>
+                @if (experience.description) {
+                  <p class="text-gray-300 text-base mt-3 leading-relaxed">{{ experience.description }}</p>
+                }
+                @if (authService.isLoggedIn()) {
+                  <div class="flex gap-2 mt-2">
+                    <button (click)="openEditExperienceModal(experience)" class="text-xs text-gray-400 hover:text-white">✏️ Modifier</button>
+                    <button (click)="deleteExperience(experience.id)" class="text-xs text-gray-400 hover:text-red-400">🗑️ Supprimer</button>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
 
   </div>
 </section>
+
+<!-- Modal "Qui suis-je" -->
+@if (isEditAboutModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeEditAboutModal()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">Modifier "Qui suis-je"</h2>
+        <button (click)="closeEditAboutModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Description</label>
+        <textarea rows="5" [(ngModel)]="aboutEditForm.description"
+          class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeEditAboutModal()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveAboutChanges()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal Formation (création + modification) -->
+@if (isFormationModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeFormationModal()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">
+          {{ formationModalMode === 'create' ? 'Ajouter une formation' : 'Modifier la formation' }}
+        </h2>
+        <button (click)="closeFormationModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Titre</label>
+          <input type="text" [(ngModel)]="formationForm.title"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Date début</label>
+            <input type="text" [(ngModel)]="formationForm.startDate" placeholder="2022"
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Date fin</label>
+            <input type="text" [(ngModel)]="formationForm.endDate" placeholder="2025"
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeFormationModal()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveFormation()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal Expérience (création + modification) -->
+@if (isExperienceModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeExperienceModal()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">
+          {{ experienceModalMode === 'create' ? 'Ajouter une expérience' : 'Modifier l\'expérience' }}
+        </h2>
+        <button (click)="closeExperienceModal()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Titre du poste</label>
+          <input type="text" [(ngModel)]="experienceForm.title"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Entreprise</label>
+          <input type="text" [(ngModel)]="experienceForm.company"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Date début</label>
+            <input type="text" [(ngModel)]="experienceForm.startDate" placeholder="2024"
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Date fin</label>
+            <input type="text" [(ngModel)]="experienceForm.endDate" placeholder="2025"
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Description</label>
+          <textarea rows="3" [(ngModel)]="experienceForm.description"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeExperienceModal()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveExperience()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+}

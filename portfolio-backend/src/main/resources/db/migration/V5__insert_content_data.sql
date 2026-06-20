@@ -1,6 +1,6 @@
 INSERT INTO home (title, subtitle, description) VALUES
 (
-  'Bonjour, je suis Jonathan Leite',
+  'Bonjour, je suis Jonathan LEITE TEIXEIRA',
   'Développeur Full Stack · Diplômé d''un Master MIAGE',
   'Passionné par le développement Full Stack. À la recherche d''opportunités pour rejoindre une équipe dynamique.'
 );

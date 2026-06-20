@@ -7,6 +7,7 @@ export interface HomeContent {
   title: string;
   subtitle: string;
   description: string;
+  photoUrl: string;
 }
 
 @Injectable({
@@ -20,4 +21,11 @@ export class HomeService {
   getHome(): Observable<HomeContent> {
     return this.http.get<HomeContent>(this.apiUrl);
   }
+
+  updateHome(home: HomeContent): Observable<HomeContent> {
+  return this.http.put<HomeContent>(this.apiUrl, home, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
 }
+}
+

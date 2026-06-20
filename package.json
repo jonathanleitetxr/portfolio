@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@angular/cdk": "^22.0.2"
+  }
+}
