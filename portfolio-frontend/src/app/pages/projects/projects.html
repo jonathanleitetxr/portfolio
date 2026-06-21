@@ -1,69 +1,62 @@
 <section class="min-h-screen bg-gray-900 text-white pt-24 pb-16">
   <div class="max-w-5xl mx-auto px-4">
 
-    <h1 class="text-4xl font-bold mb-12 text-center">
-      Mes <span class="text-indigo-400">projets</span>
-    </h1>
+    <div class="flex items-center justify-between mb-12">
+      <h1 class="text-4xl font-bold">
+        Mes <span class="text-indigo-400">projets</span>
+      </h1>
+      @if (authService.isLoggedIn()) {
+        <button (click)="openCreateProjectModal()"
+          class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          + Ajouter un projet
+        </button>
+      }
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
       @for (project of projects(); track project.id) {
+        <div (click)="hasSlides(project) ? openModal($event, project) : null" 
+            class="relative bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform"
+            [class.cursor-pointer]="hasSlides(project)">
 
-        @if (hasSlides(project)) {
-          <div (click)="openModal($event, project)" class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+          @if (authService.isLoggedIn()) {
+            <div class="absolute top-2 right-2 flex gap-2 z-10">
+              <button (click)="openEditProjectModal(project, $event)" class="bg-gray-900 bg-opacity-80 hover:bg-opacity-100 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">✏️</button>
+              <button (click)="deleteProject(project.id, $event)" class="bg-gray-900 bg-opacity-80 hover:bg-red-900 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">🗑️</button>
+            </div>
+          }
+
+          @if (project.featured) {
+            <span class="absolute top-2 left-2 bg-amber-500 text-gray-900 text-xs font-bold px-2 py-1 rounded-full z-10">
+              ⭐
+            </span>
+          }
+
+          @if (project.imageUrl) {
             <img [src]="project.imageUrl" alt="{{ project.title }}" class="w-full h-48 object-cover"/>
-            <div class="p-5">
-              <h2 class="text-lg font-semibold mb-2">{{ project.title }}</h2>
-              <p class="text-gray-400 text-sm mb-4">{{ project.description }}</p>
-              <div class="flex flex-wrap gap-2">
-                @for (tech of project.technologies.split(','); track tech) {
-                  <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">{{ tech }}</span>
-                }
-              </div>
+          } @else {
+            <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
+              <span class="text-indigo-300 text-lg font-semibold">{{ project.title }}</span>
+            </div>
+          }
+          <div class="p-5">
+            <h2 class="text-lg font-semibold mb-2">{{ project.title }}</h2>
+            <p class="text-gray-400 text-sm mb-4">{{ project.description }}</p>
+            <div class="flex flex-wrap gap-2">
+              @for (tech of project.technologies.split(','); track tech) {
+                <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">{{ tech }}</span>
+              }
             </div>
           </div>
-        }
-
-        @if (!hasSlides(project)) {
-          <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-            @if (project.imageUrl) {
-              <img [src]="project.imageUrl" alt="{{ project.title }}" class="w-full h-48 object-cover"/>
-            } @else {
-              <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
-                <span class="text-indigo-300 text-lg font-semibold">{{ project.title }}</span>
-              </div>
-            }
-            <div class="p-5">
-              <h2 class="text-lg font-semibold mb-2">{{ project.title }}</h2>
-              <p class="text-gray-400 text-sm mb-4">{{ project.description }}</p>
-              <div class="flex flex-wrap gap-2">
-                @for (tech of project.technologies.split(','); track tech) {
-                  <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">{{ tech }}</span>
-                }
-              </div>
-            </div>
-          </div>
-        }
-
+        </div>
       }
-
-      <div class="bg-gray-800 rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-        <div class="w-full h-48 bg-indigo-900 flex items-center justify-center">
-          <span class="text-indigo-300 text-lg font-semibold">Projet universitaire</span>
-        </div>
-        <div class="p-5">
-          <h2 class="text-lg font-semibold mb-2">Projet universitaire</h2>
-          <p class="text-gray-400 text-sm mb-4">Projet réalisé durant mon Master 2 MIAGE.</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-indigo-900 text-indigo-300 px-2 py-1 rounded text-xs">Java</span>
-          </div>
-        </div>
-      </div>
 
     </div>
   </div>
 </section>
 
+<!-- Modal carrousel public -->
 @if (isModalOpen && selectedProject()) {
   <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-75 z-40" (click)="closeModal()"></div>
 
@@ -117,6 +110,195 @@
             </div>
           </div>
         </div>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal formulaire Projet -->
+@if (isProjectFormOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" (click)="closeProjectForm()">
+    <div class="bg-gray-800 rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+      
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">
+          {{ projectFormMode === 'create' ? 'Ajouter un projet' : 'Modifier le projet' }}
+        </h2>
+        <button (click)="closeProjectForm()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Titre</label>
+          <input type="text" [(ngModel)]="projectForm.title"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Description</label>
+          <textarea rows="3" [(ngModel)]="projectForm.description"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Technologies (séparées par des virgules)</label>
+          <input type="text" [(ngModel)]="projectForm.technologies" placeholder="Java, Spring Boot, Angular"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Image de la carte</label>
+          <input type="file" accept="image/*" (change)="onProjectImageSelected($event)"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none"/>
+          @if (isUploadingProjectImage) {
+            <p class="text-sm text-gray-400 mt-1">Upload en cours...</p>
+          }
+          @if (projectForm.imageUrl) {
+            <img [src]="projectForm.imageUrl" alt="Aperçu" class="w-32 h-20 object-cover rounded mt-2"/>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Lien GitHub (optionnel)</label>
+          <input type="text" [(ngModel)]="projectForm.githubUrl"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Lien démo (optionnel)</label>
+          <input type="text" [(ngModel)]="projectForm.demoUrl"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" [(ngModel)]="projectForm.featured" id="featured" class="w-4 h-4"/>
+          <label for="featured" class="text-sm text-gray-300">Mettre en avant</label>
+        </div>
+      </div>
+
+      <!-- Gestion des slides, uniquement en mode édition -->
+      @if (projectFormMode === 'edit') {
+        <div class="mt-8 pt-6 border-t border-gray-700">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-indigo-400">Slides du carrousel</h3>
+            <button (click)="openCreateSlideModal()"
+              class="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              + Ajouter une slide
+            </button>
+          </div>
+
+          <div class="space-y-2">
+            @for (slide of selectedProject()?.slides; track slide.id) {
+              <div class="bg-gray-700 rounded-lg p-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <img [src]="slide.imageUrl" alt="slide" class="w-16 h-10 object-cover rounded"/>
+                  <span class="text-sm">{{ slide.tag }}</span>
+                </div>
+                <div class="flex gap-2">
+                  <button (click)="openEditSlideModal(slide)" class="text-xs text-gray-400 hover:text-white">✏️</button>
+                  <button (click)="deleteSlide(slide.id)" class="text-xs text-gray-400 hover:text-red-400">🗑️</button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeProjectForm()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveProject()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal formulaire Slide -->
+@if (isSlideFormOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-80 z-[60] flex items-center justify-center p-4" (click)="closeSlideForm()">
+    <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6" (click)="$event.stopPropagation()">
+      
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-indigo-400">
+          {{ slideFormMode === 'create' ? 'Ajouter une slide' : 'Modifier la slide' }}
+        </h2>
+        <button (click)="closeSlideForm()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Image</label>
+          <input type="file" accept="image/*" (change)="onSlideImageSelected($event)"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none"/>
+          @if (isUploadingSlideImage) {
+            <p class="text-sm text-gray-400 mt-1">Upload en cours...</p>
+          }
+          @if (slideForm.imageUrl) {
+            <img [src]="slideForm.imageUrl" alt="Aperçu" class="w-full rounded mt-2" style="aspect-ratio: 16/9; object-fit: cover;"/>
+          }
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Tag (titre court)</label>
+          <input type="text" [(ngModel)]="slideForm.tag" placeholder="Ex: Module de commentaires"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Description</label>
+          <textarea rows="4" [(ngModel)]="slideForm.description"
+            class="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeSlideForm()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="saveSlide()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Enregistrer
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal de recadrage d'image -->
+@if (isCropperOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-90 z-[70] flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-xl max-w-2xl w-full p-6">
+      
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-indigo-400">Recadrer l'image</h2>
+        <button (click)="closeCropper()" class="text-gray-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      @if (imageToCrop) {
+        <image-cropper
+          [imageBase64]="imageToCrop"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="16 / 9"
+          format="jpeg"
+          [imageQuality]="92"
+          (imageCropped)="onImageCropped($event)"
+          style="max-height: 60vh; display: block;">
+        </image-cropper>
+      }
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="closeCropper()"
+          class="flex-1 border border-gray-600 text-gray-300 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Annuler
+        </button>
+        <button (click)="confirmCrop()"
+          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition-colors">
+          Valider le cadrage
+        </button>
       </div>
 
     </div>
