@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.prod';
 
 export interface Formation {
   id: number;
@@ -14,7 +15,7 @@ export interface Formation {
   providedIn: 'root'
 })
 export class FormationService {
-  private apiUrl = 'http://localhost:8080/api/formations';
+  private apiUrl = `${environment.apiUrl}/api/formations`;
 
   constructor(private http: HttpClient) {}
 

@@ -5,6 +5,7 @@ import { UploadService } from '../../services/upload';
 import { AuthService } from '../../services/auth';
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-projects',
@@ -176,11 +177,11 @@ export class Projects implements OnInit {
 
       this.uploadService.uploadFile(this.pendingProjectImageFile).subscribe({
         next: (response) => {
-          this.projectForm.imageUrl = `http://localhost:8080${response.url}`;
+          this.projectForm.imageUrl = `${environment.apiUrl}${response.url}`;
           this.pendingProjectImageFile = null;
 
           if (oldImageUrl && oldImageUrl.includes('/images/')) {
-            const relativeUrl = oldImageUrl.replace('http://localhost:8080', '');
+            const relativeUrl = oldImageUrl.replace('${environment.apiUrl}', '');
             this.uploadService.deleteFile(relativeUrl).subscribe();
           }
 
@@ -262,14 +263,14 @@ export class Projects implements OnInit {
 
           // On supprime l'image principale du projet
           if (project?.imageUrl && project.imageUrl.includes('/images/')) {
-            const relativeUrl = project.imageUrl.replace('http://localhost:8080', '');
+            const relativeUrl = project.imageUrl.replace('${environment.apiUrl}', '');
             this.uploadService.deleteFile(relativeUrl).subscribe();
           }
 
           // On supprime aussi toutes les images des slides associées
           project?.slides.forEach(slide => {
             if (slide.imageUrl.includes('/images/')) {
-              const relativeUrl = slide.imageUrl.replace('http://localhost:8080', '');
+              const relativeUrl = slide.imageUrl.replace('${environment.apiUrl}', '');
               this.uploadService.deleteFile(relativeUrl).subscribe();
             }
           });
@@ -319,11 +320,11 @@ export class Projects implements OnInit {
 
       this.uploadService.uploadFile(this.pendingSlideImageFile).subscribe({
         next: (response) => {
-          this.slideForm.imageUrl = `http://localhost:8080${response.url}`;
+          this.slideForm.imageUrl = `${environment.apiUrl}${response.url}`;
           this.pendingSlideImageFile = null;
 
           if (oldImageUrl && oldImageUrl.includes('/images/')) {
-            const relativeUrl = oldImageUrl.replace('http://localhost:8080', '');
+            const relativeUrl = oldImageUrl.replace(`${environment.apiUrl}`, '');
             this.uploadService.deleteFile(relativeUrl).subscribe();
           }
 
@@ -385,7 +386,7 @@ export class Projects implements OnInit {
           this.refreshSelectedProject();
           // On supprime aussi le fichier image associé
           if (slide?.imageUrl && slide.imageUrl.includes('/images/')) {
-            const relativeUrl = slide.imageUrl.replace('http://localhost:8080', '');
+            const relativeUrl = slide.imageUrl.replace(`${environment.apiUrl}`, '');
             this.uploadService.deleteFile(relativeUrl).subscribe();
           }
         },

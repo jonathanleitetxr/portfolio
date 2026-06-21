@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.prod';
 
 export interface ContactContent {
   id: number;
@@ -13,7 +14,7 @@ export interface ContactContent {
   providedIn: 'root'
 })
 export class ContactService {
-  private apiUrl = 'http://localhost:8080/api/contact';
+  private apiUrl = `${environment.apiUrl}/api/contact`;
 
   constructor(private http: HttpClient) {}
 

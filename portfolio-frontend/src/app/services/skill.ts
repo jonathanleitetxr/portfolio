@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.prod';
 
 export interface Skill {
   id: number;
@@ -14,7 +15,7 @@ export interface Skill {
   providedIn: 'root'
 })
 export class SkillService {
-  private apiUrl = 'http://localhost:8080/api/skills';
+  private apiUrl = `${environment.apiUrl}/api/skills`;
 
   constructor(private http: HttpClient) {}
 
