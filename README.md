@@ -133,5 +133,3 @@ Le projet inclut des tests unitaires et d'intégration côté backend (services 
 
 **Jonathan Leite Teixeira**
 Développeur Full Stack — Diplômé d'un Master MIAGE
-
-[Portfolio](https://jonathanleite.fr) · [LinkedIn](#) · [Email](mailto:jleiteteixeira7@gmail.com)
