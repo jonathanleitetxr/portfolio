@@ -1,35 +1,46 @@
 package com.portfolio.portfolio.backend.service;
 
 import com.portfolio.portfolio.backend.dto.ContactFormRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.resend.Resend;
+import com.resend.services.emails.model.CreateEmailOptions;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MailService {
 
-    @Autowired(required = false)
-    private JavaMailSender mailSender;
+    @Value("${resend.api-key}")
+    private String apiKey;
 
-    @Value("${spring.mail.username:}")
-    private String recipientEmail;
+    @Value("${resend.from-email}")
+    private String fromEmail;
+
+    @Value("${resend.to-email}")
+    private String toEmail;
 
     public void sendContactEmail(ContactFormRequest form) {
-        if (mailSender == null) {
-            throw new IllegalStateException("Le service d'envoi d'email n'est pas configuré actuellement");
-        }
+        Resend resend = new Resend(apiKey);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(recipientEmail);
-        message.setReplyTo(form.getEmail());
-        message.setSubject("[Portfolio] " + form.getSubject());
-        message.setText(
-            "Nouveau message depuis ton portfolio !\n\n" +
-            "De : " + form.getName() + " (" + form.getEmail() + ")\n\n" +
-            "Message :\n" + form.getMessage()
-        );
-        mailSender.send(message);
+        String htmlContent = """
+            <h2>Nouveau message depuis ton portfolio !</h2>
+            <p><strong>De :</strong> %s (%s)</p>
+            <p><strong>Sujet :</strong> %s</p>
+            <p><strong>Message :</strong></p>
+            <p>%s</p>
+            """.formatted(form.getName(), form.getEmail(), form.getSubject(), form.getMessage());
+
+        CreateEmailOptions params = CreateEmailOptions.builder()
+                .from("Portfolio <" + fromEmail + ">")
+                .to(toEmail)
+                .replyTo(form.getEmail())
+                .subject("[Portfolio] " + form.getSubject())
+                .html(htmlContent)
+                .build();
+
+        try {
+            resend.emails().send(params);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'envoi de l'email", e);
+        }
     }
 }
