@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SkillService, Skill } from './skill';
+import { environment } from '../../environments/environment';
 
 describe('SkillService', () => {
   let service: SkillService;
@@ -28,8 +29,14 @@ describe('SkillService', () => {
 
   it('devrait récupérer toutes les compétences', () => {
     const fausses_competences: Skill[] = [
-      { id: 1, name: 'Java', category: 'Backend', level: 70 },
-      { id: 2, name: 'Angular', category: 'Frontend', level: 60 }
+      {
+        id: 1, name: 'Java', category: 'Backend', level: 70,
+        displayOrder: 0
+      },
+      {
+        id: 2, name: 'Angular', category: 'Frontend', level: 60,
+        displayOrder: 0
+      }
     ];
 
     // On appelle la méthode du service qu'on veut tester
@@ -39,7 +46,7 @@ describe('SkillService', () => {
     });
 
     // On intercepte la requête HTTP que le service a déclenchée
-    const req = httpMock.expectOne('http://localhost:8080/api/skills');
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/skills`);
     expect(req.request.method).toBe('GET');
 
     // On simule la réponse du serveur avec nos fausses données

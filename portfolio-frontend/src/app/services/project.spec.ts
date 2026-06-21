@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProjectService, Project } from './project';
+import { environment } from '../../environments/environment';
 
 describe('ProjectService', () => {
   let service: ProjectService;
@@ -34,7 +35,7 @@ describe('ProjectService', () => {
       expect(projects[0].title).toBe('New Pilote');
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/api/projects');
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/projects`);
     expect(req.request.method).toBe('GET');
     req.flush(faux_projets);
   });
