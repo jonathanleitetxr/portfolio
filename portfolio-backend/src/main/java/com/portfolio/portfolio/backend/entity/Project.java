@@ -37,5 +37,6 @@ public class Project {
 
     // Relation One-to-Many : un projet peut avoir plusieurs slides
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OrderBy("slideOrder ASC")
     private List<ProjectSlide> slides;
 }

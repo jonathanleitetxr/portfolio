@@ -4,10 +4,11 @@ import { ProjectService, Project, ProjectSlide } from '../../services/project';
 import { UploadService } from '../../services/upload';
 import { AuthService } from '../../services/auth';
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-projects',
-  imports: [FormsModule, ImageCropperComponent],
+  imports: [FormsModule, ImageCropperComponent, DragDropModule],
   templateUrl: './projects.html',
   styleUrl: './projects.css'
 })
@@ -49,6 +50,7 @@ export class Projects implements OnInit {
 
   pendingProjectImageFile: File | null = null;
   pendingSlideImageFile: File | null = null;
+  pendingSlideOrderChange = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -152,6 +154,8 @@ export class Projects implements OnInit {
   closeProjectForm(): void {
     this.isProjectFormOpen.set(false);
     this.pendingProjectImageFile = null;
+    this.pendingSlideOrderChange = false;
+    this.loadProjects(); // Recharge les vraies données pour annuler tout changement local non sauvegardé
   }
 
   onProjectImageSelected(event: Event): void {
@@ -190,23 +194,60 @@ export class Projects implements OnInit {
   }
 
   private doSaveProject(): void {
-    if (this.projectFormMode === 'create') {
-      this.projectService.createProject(this.projectForm).subscribe({
-        next: () => {
-          this.loadProjects();
-          this.isProjectFormOpen.set(false);
-        },
-        error: (err) => console.error('Erreur création projet', err)
-      });
-    } else if (this.projectEditingId !== null) {
-      this.projectService.updateProject(this.projectEditingId, this.projectForm).subscribe({
-        next: () => {
-          this.loadProjects();
-          this.isProjectFormOpen.set(false);
-        },
-        error: (err) => console.error('Erreur modification projet', err)
-      });
+    const finishSave = () => {
+      if (this.projectFormMode === 'create') {
+        this.projectService.createProject(this.projectForm).subscribe({
+          next: () => {
+            this.loadProjects();
+            this.isProjectFormOpen.set(false);
+          },
+          error: (err) => console.error('Erreur création projet', err)
+        });
+      } else if (this.projectEditingId !== null) {
+        this.projectService.updateProject(this.projectEditingId, this.projectForm).subscribe({
+          next: () => {
+            if (this.pendingSlideOrderChange) {
+              this.saveSlideOrder();
+            } else {
+              this.loadProjects();
+            }
+            this.isProjectFormOpen.set(false);
+          },
+          error: (err) => console.error('Erreur modification projet', err)
+        });
+      }
+    };
+    finishSave();
+  }
+
+  saveSlideOrder(): void {
+    const slides = this.selectedProject()?.slides || [];
+
+    if (slides.length === 0) {
+      this.loadProjects();
+      return;
     }
+
+    this.updateSlideSequentially(slides, 0);
+  }
+
+  private updateSlideSequentially(slides: ProjectSlide[], index: number): void {
+    if (index >= slides.length) {
+      this.pendingSlideOrderChange = false;
+      this.loadProjects();
+      return;
+    }
+
+    const slide = slides[index];
+    this.projectService.updateSlide(this.projectEditingId!, slide.id, { ...slide, slideOrder: index }).subscribe({
+      next: () => {
+        this.updateSlideSequentially(slides, index + 1);
+      },
+      error: (err) => {
+        console.error('Erreur mise à jour ordre slide', err);
+        this.updateSlideSequentially(slides, index + 1);
+      }
+    });
   }
 
   deleteProject(id: number, event: MouseEvent): void {
@@ -391,4 +432,18 @@ export class Projects implements OnInit {
 
     this.closeCropper();
   }
+
+  onSlideDrop(event: CdkDragDrop<ProjectSlide[] | undefined>): void {
+    const list = [...(this.selectedProject()?.slides || [])];
+    moveItemInArray(list, event.previousIndex, event.currentIndex);
+
+    const current = this.selectedProject();
+    if (current) {
+      this.selectedProject.set({ ...current, slides: list });
+    }
+
+    // On marque qu'il y a un changement d'ordre en attente, à sauvegarder seulement au clic sur "Enregistrer"
+    this.pendingSlideOrderChange = true;
+  }
+
 }

@@ -185,10 +185,11 @@
             </button>
           </div>
 
-          <div class="space-y-2">
+          <div cdkDropList [cdkDropListData]="selectedProject()?.slides" (cdkDropListDropped)="onSlideDrop($event)" class="space-y-2">
             @for (slide of selectedProject()?.slides; track slide.id) {
-              <div class="bg-gray-700 rounded-lg p-3 flex items-center justify-between">
+              <div cdkDrag class="bg-gray-700 rounded-lg p-3 flex items-center justify-between cursor-move">
                 <div class="flex items-center gap-3">
+                  <span class="text-gray-500">⠿</span>
                   <img [src]="slide.imageUrl" alt="slide" class="w-16 h-10 object-cover rounded"/>
                   <span class="text-sm">{{ slide.tag }}</span>
                 </div>
