@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContactService, ContactContent } from '../../services/contact';
+import { ContactFormService, ContactFormRequest } from '../../services/contact-form';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -14,15 +15,17 @@ export class Contact implements OnInit {
   contactContent = signal<ContactContent | null>(null);
 
   isEditModalOpen = signal<boolean>(false);
+  editForm = { email: '', phone: '', linkedin: '' };
 
-  editForm = {
-    email: '',
-    phone: '',
-    linkedin: ''
-  };
+  // Formulaire de contact public
+  contactForm: ContactFormRequest = { name: '', email: '', subject: '', message: '' };
+  isSending = signal<boolean>(false);
+  sendSuccess = signal<boolean>(false);
+  sendError = signal<boolean>(false);
 
   constructor(
     private contactService: ContactService,
+    private contactFormService: ContactFormService,
     public authService: AuthService
   ) {}
 
@@ -71,6 +74,27 @@ export class Contact implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors de la mise à jour', err);
+      }
+    });
+  }
+
+  // --- Envoi du formulaire de contact public ---
+
+  sendContactForm(): void {
+    this.isSending.set(true);
+    this.sendSuccess.set(false);
+    this.sendError.set(false);
+
+    this.contactFormService.sendMessage(this.contactForm).subscribe({
+      next: () => {
+        this.isSending.set(false);
+        this.sendSuccess.set(true);
+        this.contactForm = { name: '', email: '', subject: '', message: '' };
+      },
+      error: (err) => {
+        console.error('Erreur envoi message', err);
+        this.isSending.set(false);
+        this.sendError.set(true);
       }
     });
   }

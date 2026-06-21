@@ -1,0 +1,22 @@
+spring.application.name=portfolio-backend
+
+# PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/portfolio
+spring.datasource.username=postgres
+spring.datasource.password=your_password_here
+
+# JPA
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+# Flyway
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
+
+# Mail
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your_email@gmail.com
+spring.mail.password=your_app_password_here
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true

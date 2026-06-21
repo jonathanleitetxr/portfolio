@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/experiences/**").permitAll()
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/projects/*/slides").permitAll()
+                .requestMatchers("/api/contact-form").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
