@@ -1,9 +1,9 @@
 spring.application.name=portfolio-backend
 
 # PostgreSQL
-spring.datasource.url=jdbc:postgresql://localhost:5432/portfolio
-spring.datasource.username=postgres
-spring.datasource.password=your_password_here
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/portfolio}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:your_password_here}
 
 # JPA
 spring.jpa.hibernate.ddl-auto=validate
@@ -13,10 +13,13 @@ spring.jpa.show-sql=true
 spring.flyway.enabled=true
 spring.flyway.locations=classpath:db/migration
 
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
 # Mail
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
-spring.mail.username=your_email@gmail.com
-spring.mail.password=your_app_password_here
+spring.mail.username=${SPRING_MAIL_USERNAME:your_email@gmail.com}
+spring.mail.password=${SPRING_MAIL_PASSWORD:your_app_password_here}
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
