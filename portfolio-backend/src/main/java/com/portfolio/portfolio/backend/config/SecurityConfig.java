@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/projects/*/slides").permitAll()
                 .requestMatchers("/api/contact-form").permitAll()
+                .requestMatchers("/api/chat").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
