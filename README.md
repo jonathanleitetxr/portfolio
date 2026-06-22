@@ -21,6 +21,7 @@ L'objectif était double : présenter mon parcours et mes projets, tout en démo
 - Catalogue de compétences techniques avec niveaux de maîtrise
 - Showcase de projets avec carrousel de slides détaillées (animation *shared element transition*)
 - Formulaire de contact avec envoi d'email réel
+- Assistant conversationnel intelligent répondant aux questions sur le profil (compétences, projets, parcours), basé uniquement sur les données réelles du site
 
 ### Côté administration (édition inline)
 - Authentification sécurisée par **JWT**
@@ -42,6 +43,7 @@ L'objectif était double : présenter mon parcours et mes projets, tout en démo
                                       │
                                       ├──> Railway Volume (stockage images)
                                       └──> Resend API (envoi d'emails)
+                                      └──> Google Gemini API (assistant conversationnel)
 ```
 
 | Composant | Service | Rôle |
@@ -52,6 +54,7 @@ L'objectif était double : présenter mon parcours et mes projets, tout en démo
 | Base de données | **Railway (PostgreSQL)** | Stockage des données |
 | Stockage fichiers | **Railway Volumes** | Stockage persistant des images uploadées |
 | Emails | **Resend** | Envoi des messages du formulaire de contact |
+| Intelligence artificielle | **Google Gemini** | Assistant conversationnel contextuel |
 
 ---
 
@@ -65,6 +68,7 @@ L'objectif était double : présenter mon parcours et mes projets, tout en démo
 - **Flyway** pour le versionnement de la base de données
 - **Resend** (SDK Java) pour l'envoi d'emails transactionnels
 - **JUnit 5** / **Mockito** pour les tests unitaires et d'intégration
+- **Google Gemini API** pour l'assistant conversationnel
 
 ### Frontend
 - **Angular 22** (composants standalone, signals)
@@ -124,7 +128,6 @@ Le projet inclut des tests unitaires et d'intégration côté backend (services 
 
 ## 📌 Roadmap
 
-- [ ] Assistant conversationnel basé sur les données du site
 - [ ] Slides détaillées pour le projet "Ce portfolio" lui-même
 
 ---
