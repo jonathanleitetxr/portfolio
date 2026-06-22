@@ -84,11 +84,14 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div id="outilsLeft" cdkDropList [cdkDropListData]="outilsSkillsLeft()" [cdkDropListConnectedTo]="['outilsRight']" 
+          [cdkDropListDisabled]="!authService.isLoggedIn()"
           (cdkDropListDropped)="onOutilsDrop($event)" class="space-y-2">
             @for (skill of outilsSkillsLeft(); track skill.id) {
-              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+              <div cdkDrag [cdkDragDisabled]="!authService.isLoggedIn()" class="bg-gray-700 rounded-lg px-4 py-2 text-sm flex items-center justify-between" [class.cursor-move]="authService.isLoggedIn()">
                 <span class="flex items-center gap-2">
-                  <span class="text-gray-500">⠿</span>
+                  @if (authService.isLoggedIn()) {
+                    <span class="text-gray-500">⠿</span>
+                  }
                   {{ skill.name }}
                 </span>
                 @if (authService.isLoggedIn()) {
@@ -102,11 +105,14 @@
           </div>
 
           <div id="outilsRight" cdkDropList [cdkDropListData]="outilsSkillsRight()" [cdkDropListConnectedTo]="['outilsLeft']" 
+          [cdkDropListDisabled]="!authService.isLoggedIn()"
           (cdkDropListDropped)="onOutilsDrop($event)" class="space-y-2">
             @for (skill of outilsSkillsRight(); track skill.id) {
-              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+              <div cdkDrag [cdkDragDisabled]="!authService.isLoggedIn()" class="bg-gray-700 rounded-lg px-4 py-2 text-sm flex items-center justify-between" [class.cursor-move]="authService.isLoggedIn()">
                 <span class="flex items-center gap-2">
-                  <span class="text-gray-500">⠿</span>
+                  @if (authService.isLoggedIn()) {
+                    <span class="text-gray-500">⠿</span>
+                  }
                   {{ skill.name }}
                 </span>
                 @if (authService.isLoggedIn()) {
@@ -134,11 +140,14 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div id="methodesLeft" cdkDropList [cdkDropListData]="methodesSkillsLeft()" [cdkDropListConnectedTo]="['methodesRight']" 
+          [cdkDropListDisabled]="!authService.isLoggedIn()"
           (cdkDropListDropped)="onMethodesDrop($event)" class="space-y-2">
             @for (skill of methodesSkillsLeft(); track skill.id) {
-              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+              <div cdkDrag [cdkDragDisabled]="!authService.isLoggedIn()" class="bg-gray-700 rounded-lg px-4 py-2 text-sm flex items-center justify-between" [class.cursor-move]="authService.isLoggedIn()">
                 <span class="flex items-center gap-2">
-                  <span class="text-gray-500">⠿</span>
+                  @if (authService.isLoggedIn()) {
+                    <span class="text-gray-500">⠿</span>
+                  }
                   {{ skill.name }}
                 </span>
                 @if (authService.isLoggedIn()) {
@@ -152,11 +161,14 @@
           </div>
 
           <div id="methodesRight" cdkDropList [cdkDropListData]="methodesSkillsRight()" [cdkDropListConnectedTo]="['methodesLeft']" 
+          [cdkDropListDisabled]="!authService.isLoggedIn()"
           (cdkDropListDropped)="onMethodesDrop($event)" class="space-y-2">
             @for (skill of methodesSkillsRight(); track skill.id) {
-              <div cdkDrag class="bg-gray-700 rounded-lg px-4 py-2 text-sm cursor-move flex items-center justify-between">
+              <div cdkDrag [cdkDragDisabled]="!authService.isLoggedIn()" class="bg-gray-700 rounded-lg px-4 py-2 text-sm flex items-center justify-between" [class.cursor-move]="authService.isLoggedIn()">
                 <span class="flex items-center gap-2">
-                  <span class="text-gray-500">⠿</span>
+                  @if (authService.isLoggedIn()) {
+                    <span class="text-gray-500">⠿</span>
+                  }
                   {{ skill.name }}
                 </span>
                 @if (authService.isLoggedIn()) {

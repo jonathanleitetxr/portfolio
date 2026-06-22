@@ -43,11 +43,13 @@
             </button>
           }
         </div>
-        <div cdkDropList (cdkDropListDropped)="onFormationDrop($event)" class="space-y-5">
+        <div cdkDropList [cdkDropListDisabled]="!authService.isLoggedIn()" (cdkDropListDropped)="onFormationDrop($event)" class="space-y-5">
           @for (formation of formations(); track formation.id) {
-            <div cdkDrag class="border-l-2 border-indigo-400 pl-4 cursor-move bg-gray-800">
+            <div cdkDrag [cdkDragDisabled]="!authService.isLoggedIn()" class="border-l-2 border-indigo-400 pl-4 bg-gray-800" [class.cursor-move]="authService.isLoggedIn()">
               <div class="flex items-start gap-2">
-                <span class="text-gray-500 mt-1">⠿</span>
+                @if (authService.isLoggedIn()) {
+                  <span class="text-gray-500 mt-1">⠿</span>
+                }
                 <div class="flex-1">
                   <p class="text-white text-lg font-medium">{{ formation.title }}</p>
                   <p class="text-gray-400 text-sm mt-1">{{ formation.startDate }} — {{ formation.endDate }}</p>
@@ -80,11 +82,13 @@
           </button>
         }
       </div>
-      <div cdkDropList (cdkDropListDropped)="onExperienceDrop($event)" class="space-y-5">
+      <div cdkDropList [cdkDropListDisabled]="!authService.isLoggedIn()" (cdkDropListDropped)="onExperienceDrop($event)" class="space-y-5">
         @for (experience of experiences(); track experience.id) {
-          <div cdkDrag class="border-l-2 border-indigo-400 pl-4 cursor-move bg-gray-800">
+          <div cdkDrag [cdkDragDisabled]="!authService.isLoggedIn()" class="border-l-2 border-indigo-400 pl-4 bg-gray-800" [class.cursor-move]="authService.isLoggedIn()">
             <div class="flex items-start gap-2">
-              <span class="text-gray-500 mt-1">⠿</span>
+              @if (authService.isLoggedIn()) {
+                <span class="text-gray-500 mt-1">⠿</span>
+              }
               <div class="flex-1">
                 <p class="text-white text-lg font-medium">{{ experience.title }}</p>
                 <p class="text-gray-400 text-sm mt-1">{{ experience.company }} · {{ experience.startDate }} — {{ experience.endDate }}</p>
