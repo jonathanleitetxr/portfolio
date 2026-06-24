@@ -11,8 +11,6 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -27,6 +25,8 @@ public class ChatService {
     private String apiKey;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestClient restClient = RestClient.create();
+
 
     public String askQuestion(String question) {
         String context = buildContext();
@@ -94,9 +94,7 @@ public class ChatService {
     }
 
     // Appelle l'API Gemini avec le prompt construit
-        private String callGemini(String prompt) {
-        RestClient restClient = RestClient.create();
-
+    private String callGemini(String prompt) {
         Map<String, Object> requestBody = Map.of(
             "contents", List.of(
                 Map.of("parts", List.of(Map.of("text", prompt)))
