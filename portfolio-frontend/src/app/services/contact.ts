@@ -9,6 +9,7 @@ export interface ContactContent {
   email: string;
   phone: string;
   linkedin: string;
+  github: string;
 }
 
 @Injectable({

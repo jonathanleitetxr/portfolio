@@ -15,7 +15,7 @@ export class Contact implements OnInit {
   contactContent = signal<ContactContent | null>(null);
 
   isEditModalOpen = signal<boolean>(false);
-  editForm = { email: '', phone: '', linkedin: '' };
+editForm = { email: '', phone: '', linkedin: '', github: '' };
 
   // Formulaire de contact public
   contactForm: ContactFormRequest = { name: '', email: '', subject: '', message: '' };
@@ -46,7 +46,8 @@ export class Contact implements OnInit {
       this.editForm = {
         email: current.email,
         phone: current.phone,
-        linkedin: current.linkedin
+        linkedin: current.linkedin,
+        github: current.github  
       };
     }
     this.isEditModalOpen.set(true);
@@ -64,7 +65,8 @@ export class Contact implements OnInit {
       id: current.id,
       email: this.editForm.email,
       phone: this.editForm.phone,
-      linkedin: this.editForm.linkedin
+      linkedin: this.editForm.linkedin,
+      github: this.editForm.github
     };
 
     this.contactService.updateContact(updated).subscribe({

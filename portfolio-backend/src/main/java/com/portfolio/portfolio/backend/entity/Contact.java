@@ -17,4 +17,6 @@ public class Contact {
     private String phone;
 
     private String linkedin;
+
+    private String github;
 }
